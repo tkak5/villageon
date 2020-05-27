@@ -1,0 +1,6 @@
+node_modules/
+
+/serviceAccount-production.json
+/serviceAccount-staging.json
+serviceAccount-production.json
+serviceAccount-staging.json

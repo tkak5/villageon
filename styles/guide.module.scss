@@ -1,0 +1,63 @@
+$base: #fff;
+$back: #e8eaed;
+$blue: #4178BF;
+
+// common
+
+
+.guide {
+    max-width: 830px;
+    background-color: $base;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 20px auto;
+    padding: 40px;
+}
+
+.contentWrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+//Q&A
+
+.qa {
+    max-width: 830px;
+    background-color: $base;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+    border-radius: 2px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: auto;
+    padding: 40px;
+    margin: 20px auto;
+}
+
+.questionWrapper {
+    display: flex;
+    box-sizing: border-box;
+    height: 30px;
+
+    p {
+        height: 100%;
+        box-sizing: border-box;
+    }
+
+    button {
+        font-size: 16px;
+        font-weight: normal;
+        font-family: Google Sans, Noto Sans, Noto Sans JP, Noto Sans KR, Noto Naskh Arabic, Noto Sans Thai, Noto Sans Hebrew, Noto Sans Bengali, sans-serif;
+        border: none;
+        cursor: pointer;
+        outline: none;
+        padding: 0;
+        appearance: none;
+        margin-left: auto;
+        color: $blue;
+    }
+}
+

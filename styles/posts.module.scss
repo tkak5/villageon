@@ -1,0 +1,118 @@
+$base: #fff;
+$border: #dadce0;
+$link: #4178BF;
+$blue: #BDE3F2;
+$red: #f2c4cd;
+
+
+.articleWrapper {
+    position: relative;
+    background-color: $base;
+    max-width: 830px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin: 20px auto;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+    border-radius: 2px;
+    padding:40px;
+    img {
+        height: 400px;
+        width: 400px;
+    }
+    ul {
+        list-style: inside;
+    }
+}
+
+.feeWrapper {
+    width: 100%;
+    border: 1px solid $border;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .fee {
+        width: 100%;
+        display: flex;
+        margin: 20px 0;
+        justify-content: space-around;
+        align-items: center;
+        input {
+            border: 1px solid $border;
+            font-size: 16px;
+            border-radius: 4px;
+            width: 65px;
+            height: 40px;
+            background-color: $blue;
+            cursor: pointer;
+            outline: none;
+            &:hover {
+                background-color: darken($blue, 10%);
+            }
+        }
+    }
+}
+
+.purchase {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px 0;
+    input {
+        width: 150px;
+        height: 40px;
+        border: 1px solid $border;
+        border-radius: 4px;
+        cursor: pointer;
+        outline: none;
+        font-size: 16px;
+        background-color: $blue;
+            &:hover {
+                background-color: darken($blue, 10%);
+            }
+    }
+}
+
+.hideButtonWrapper {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 100%;
+    margin-right: 20px;
+    .hideButton {
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+.meta {
+    padding: 40px 0;
+}
+
+.link {
+    color: $link;
+}
+
+
+.content, .ban, .attention, .requirement {
+    border-top: 1px solid $border;
+    padding: 40px 0;
+}
+
+.reqDetails {
+    display: flex;
+    justify-content: space-between;
+}
+.reqContent {
+    width: 100%;
+}

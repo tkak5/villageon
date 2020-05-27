@@ -1,0 +1,7 @@
+{
+  "projects": {
+    "default": "sample-staging-3874f",
+    "production": "sample-production",
+    "staging": "sample-staging-3874f"
+  }
+}

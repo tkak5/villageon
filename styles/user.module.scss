@@ -1,0 +1,122 @@
+$base: #fff;
+$blue: #BDE3F2;
+$link: #4178BF;
+$border: #dadce0;
+
+
+.userWrapper {
+    background-color: $base;
+    max-width: 575px;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+    border-radius: 2px;
+    padding: 40px;
+}
+
+.detailWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    li {
+        list-style: none;
+    }
+}
+
+.eventList {
+    border-top: 1px solid $border;
+    padding: 40px;
+}
+.contentsWrapper {
+}
+
+.label {
+    min-width: 150px;
+    text-align: center;
+}
+
+.contents {
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+    border-bottom: 1px solid $border;
+    .contentLeft {
+        width: 30%;
+    }
+    .contentRight {
+        width: 70%;
+    }
+    .inputName {
+        width: 40%;
+        height: 20px;
+        margin-right: 5px;
+        outline: none;
+        border: 1px solid $border;
+    }
+    .input {
+        width: 80%;
+        outline: none;
+        height: 20px;
+        border: 1px solid $border;
+    }
+    .inputButton {
+        margin-top: 5px;
+        width: 40px;
+        height: 20px;
+        border: 1px solid $border;
+        border-radius: 2px;
+        outline: none;
+        box-sizing: content-box;
+        cursor: pointer;
+        background-color: $base;
+        &:hover {
+            background-color: darken($base, 5%);
+        }
+    }
+    .passBlock {
+        display: flex;
+        width: 80%;
+        height: 20px;
+        border: 1px solid $border;
+        margin-top: 5px;
+    }
+    .inputPass {
+        width: 100%;
+        border: none;
+        outline: none;
+
+    }
+    .passButton {
+        border: none;
+        outline: none;
+        opacity: 60%;
+    }
+}
+
+.link {
+    cursor: pointer;
+    color: $link;
+    min-width: 150px;
+    text-align: center;
+}
+
+.delete {
+    text-align: center;
+    width: 100%;
+    cursor: pointer;
+    color: red;
+}
+
+//admin
+.adminUsers {
+    display: flex;
+    justify-content: space-between;
+    padding:10px;
+}
+
+.signOut {
+    margin-top: 20px;
+}

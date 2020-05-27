@@ -1,0 +1,153 @@
+$base: #fff;
+$blue: #BDE3F2;
+$link: #4178BF;
+$border-color: #dadce0;
+
+.signWrapper {
+    background-color: $base;
+    max-width: 575px;
+    margin: 20px auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+    border-radius: 2px;
+    padding: 40px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.nameWrapper {
+    display: flex;
+    justify-content: space-between;
+    p {
+        width: 45%;
+    }
+    .name {
+        width: 45%;
+        margin: 5px 0;
+        height: 60px;
+        border: 1px solid $border-color;
+        border-radius: 2px;
+        outline: none;
+        font-size: 16px;
+        padding:7px;
+    }
+}
+
+.genderWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .genderLeft, .genderRight {
+        border: 1px solid $border-color;
+        border-radius: 2px;
+        width: 45%;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        padding: 7px;
+    }
+}
+
+.input {
+    margin: 5px 0;
+    width: 405px;
+    height: 60px;
+    border: 1px solid $border-color;
+    border-radius: 2px;
+    outline: none;
+    font-size: 16px;
+    padding:7px;
+}
+
+.passBlock {
+    margin: 5px 0;
+    width: 405px;
+    height: 60px;
+    border: 1px solid $border-color;
+    border-radius: 2px;
+    outline: none;
+    padding:7px;
+    .passInput {
+        width: 80%;
+        height: 60px;
+        border: none;
+        outline: none;
+        font-size: 16px;
+    }
+    .passButton {
+        width: 15%;
+        border: none;
+        height: 60px;
+        font-size: 12px;
+        outline: none;
+        opacity: 60%;
+    }
+}
+
+.alert {
+    color: red;
+    font-size: 14px;
+    padding-left: 7px;
+}
+
+.link {
+
+    color: $link;
+}
+
+.unChecked {
+    margin: 5px 0;
+    width: 405px;
+    height: 60px;
+    border: 1px solid $border-color;
+    border-radius: 2px;
+    outline: none;
+    font-size: 16px;
+    padding:7px;
+    box-sizing: content-box;
+}
+.checked {
+    margin: 5px 0;
+    width: 405px;
+    height: 60px;
+    border: 1px solid $border-color;
+    border-radius: 2px;
+    outline: none;
+    font-size: 16px;
+    padding:7px;
+    box-sizing: content-box;
+    cursor: pointer;
+    background-color: $blue;
+    &:hover {
+        background-color: darken($blue, 5%);
+    }
+}
+
+.button {
+    box-sizing: content-box;
+    border: none;
+    border: 1px solid $border-color;
+    border-radius: 2px;
+    width: 405px;
+    height: 50px;
+    cursor: pointer;
+    outline: none;
+    font-size: 16px;
+    &:hover {
+        background-color: darken($base, 5%);
+    }
+}
+
+.bottom {
+    margin-top: 20px;
+    p {
+        font-size: 14px;
+    }
+}
