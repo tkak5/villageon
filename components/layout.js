@@ -114,7 +114,7 @@ export default function Layout ({ children, home }) {
                     <li className={styles.headerItems}>
                         <div className={styles.headerDisplay}>
                             <Link href="/info/privacy">
-                                <a><p>企業情報</p></a>
+                                <a><p>団体情報</p></a>
                             </Link>
                         </div>
                     </li>

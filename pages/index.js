@@ -35,6 +35,11 @@ export default function Home({ allPostsData }) {
               <li className={styles.empty}></li>
           ))}
         </ul>
+        <div className={styles.bannerWrapper}>
+          <a className={styles.banner} href="https://machicon.jp/" target="_blank">
+            <img title="machicon JAPAN" src="https://machicon.jp/mj_logo400-91.png" alt="全国街コン公式サイト machicon JAPAN"/>
+          </a>
+        </div>
       </section>
     </Layout>
   )
