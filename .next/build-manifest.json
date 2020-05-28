@@ -28,7 +28,11 @@
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],
-    "/next/dist/pages/_error": [
+    "/info/privacy": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
+    "/info/tos": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],

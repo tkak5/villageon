@@ -64,7 +64,7 @@ export default function Layout ({ children, home }) {
     return (
         <div>
             <Head>
-                <link rel="icon" href="/favi.ico" />
+                <link rel="icon" href="/images/logo-no-text.png" />
                 <meta
                     name="description"
                     content={metaSentence}
