@@ -20,19 +20,29 @@ export default function Home({ allPostsData }) {
         <title>{siteTitle}</title>
       </Head>
       <section>
-        <ul className={styles.mainWrapper}>
+        <ul className="
+          flex justify-center flex-wrap p-6
+          sm:p-0">
           {allPostsData.map(({ id, date, title }) => (
-            <Link href="/posts/[id]" as={`/posts/${id}`}>
-              <a>
-                <li className={styles.posts} key={id}>
-                  <p>{title}</p>
-                  <p>{date}</p>
-                </li>
-              </a>
-            </Link>
+            <li className="
+              my-4 w-full bg-white shadow h-64 flex items-center justify-center
+              sm:w-5/12 sm:mx-2
+              md:w-2/5 md:mx-2
+              lg:w-1/4">
+              <Link href="/posts/[id]" as={`/posts/${id}`}>
+                <a>
+                  <p className="w-full m-2">{title}</p>
+                  <p className="w-full m-2">{date}</p>
+                </a>
+              </Link>
+            </li>
           ))}
           {allPostsData.map(({ id, date, title }) => (
-              <li className={styles.empty}></li>
+              <li className="
+              my-4 w-full flex items-center justify-center
+              sm:w-5/12 sm:mx-2
+              md:w-2/5 md:mx-2
+              lg:w-1/4"></li>
           ))}
         </ul>
         <div className={styles.bannerWrapper}>

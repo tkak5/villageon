@@ -35,12 +35,12 @@ $base: #fff;
     justify-content: center;
     align-items: center;
     .banner {
+        padding: 20px;
         background-color: white;
         box-shadow: 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
         img {
             width: 200px;
             height: 46px;
-            padding: 20px;
         }
     }
 }
