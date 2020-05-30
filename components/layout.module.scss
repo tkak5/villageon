@@ -1,5 +1,6 @@
 $base: #fff;
 $blue: #63D4FF;
+$border: #dadce0;
 
 
 .header {
@@ -19,10 +20,12 @@ $blue: #63D4FF;
 }
 
 .logoSpace {
+    position: fixed;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 40px;
+    width: 45px;
+    height: 45px;
     a {
         display: flex;
         align-items: flex-end;
@@ -92,9 +95,9 @@ $blue: #63D4FF;
 }
 
 .footerInfo {
-    height: 80px;
     width: 100%;
-    display: flex;
+    border-top: 1px solid $border;
+    padding-top: 20px;
 
 }
 

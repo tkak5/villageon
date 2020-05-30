@@ -42,6 +42,7 @@ const Default = ({children }) => {
 export default function Layout ({ children, home }) {
     const [user, setUser] = useState("")
     const [mount, setMount] = useState(true)
+    const [menu, setMenu] = useState(false)
     
     useEffect(() => {
         
@@ -59,12 +60,16 @@ export default function Layout ({ children, home }) {
             setMount(false)
         }
     })
+
+    const toggleMenu = () => {
+        setMenu(!menu)
+    }
     
     
     return (
         <div>
             <Head>
-                <link rel="icon" href="/favi.ico" />
+                <link rel="icon" href="/images/logo-no-text.png" />
                 <meta
                     name="description"
                     content={metaSentence}
@@ -72,64 +77,8 @@ export default function Layout ({ children, home }) {
                 <meta name="og:title" content={siteTitle} />
                 <meta name="twitter:card" content="summary_large_image" />
             </Head>
-            <header className={styles.header}>
-                <div className={styles.logoSpace}>
-                    <Link href="/">
-                        <a>
-                            <img
-                                src="/images/logo-no-text.png"
-                                className={styles.headerImage}
-                                alt={siteTitle}
-                            />
-                        </a>
-                    </Link>
-                </div>
-                <ul className={styles.headerItemsWrapper}>
-                    <li className={styles.headerItems}>
-                        <div className={styles.headerDisplay}>
-                            <Link href="/">
-                                <a><p>イベント</p></a>
-                            </Link>
-                        </div>
-                    </li>
-                    
-                    <li className={styles.headerItems}>
-                        <div className={styles.headerDisplay}>
-                            
-                            <Link href={user ? "/user/details" : "/sign/signin"}>
-                                <a><p>{user ? "ユーザー情報" :"ログイン"}</p></a>
-                            </Link>
-                        </div>
-                    </li>
-                    
-                    {/*
-                    <li className={styles.headerItems}>
-                        <div className={styles.headerDisplay}>
-                            <Link href="/guide">
-                                <a><p>参加ガイド/よくある質問</p></a>
-                            </Link>
-                        </div>
-                    </li>
-                    */}
-                    <li className={styles.headerItems}>
-                        <div className={styles.headerDisplay}>
-                            <Link href="/info/privacy">
-                                <a><p>団体情報</p></a>
-                            </Link>
-                        </div>
-                    </li>
-                </ul>
-            </header>
-            
-            <main className={styles.main}>{children}</main>
-            <footer className={styles.footer}>
-                <div className={styles.contact}>
-                    <p className={styles.contactItems}>{phoneNumber}</p>
-                    <p className={styles.contactTime}>受付時間: {phoneTime}</p>
-                    <p className={styles.contactItems}>{mail}</p>
-                    <p className={styles.contactTime}>受付時間： {mailTime}</p>
-                </div>
-                <div className={styles.footerInfo}>
+            <Default>
+                <header className={styles.header}>
                     <div className={styles.logoSpace}>
                         <Link href="/">
                             <a>
@@ -138,28 +87,120 @@ export default function Layout ({ children, home }) {
                                     className={styles.headerImage}
                                     alt={siteTitle}
                                 />
-                                <p>villageon</p>
                             </a>
                         </Link>
                     </div>
-                    <div>
+                    <ul className={styles.headerItemsWrapper}>
+                        <li className={styles.headerItems}>
+                            <div className={styles.headerDisplay}>
+                                <Link href="/">
+                                    <a><p>イベント</p></a>
+                                </Link>
+                            </div>
+                        </li>
+
+                        <li className={styles.headerItems}>
+                            <div className={styles.headerDisplay}>
+
+                                <Link href={user ? "/user/details" : "/sign/signin"}>
+                                    <a><p>{user ? "ユーザー情報" :"ログイン"}</p></a>
+                                </Link>
+                            </div>
+                        </li>
+
+                        {/*
+                        <li className={styles.headerItems}>
+                            <div className={styles.headerDisplay}>
+                                <Link href="/guide">
+                                    <a><p>参加ガイド/よくある質問</p></a>
+                                </Link>
+                            </div>
+                        </li>
+                        */}
+                        <li className={styles.headerItems}>
+                            <div className={styles.headerDisplay}>
+                                <Link href="/info/privacy">
+                                    <a><p>団体情報</p></a>
+                                </Link>
+                            </div>
+                        </li>
+                    </ul>
+                </header>
+            </Default>
+            <Mobile>
+                <header className={styles.header}>
+                    <div className="flex justify-center items-center w-full">
+                        <Link href="/">
+                            <a><img className="h-6 w-6" src="/images/logo-no-text.png"/></a>
+                        </Link>
                     </div>
-                    <div className={styles.footerRight}>
-                        <div className={styles.footerRightItems}>
-                            <Link href="/info/tos">
-                                <a>利用規約</a>
+                    <div className="flex fixed top-0 right-0 h-10 justify-center items-center z-30 px-6">
+                            <img className="h-4 w-4" 
+                            src={!menu ? "/images/menu-icon.png" : "/images/cross-icon.png"}
+                            onClick={toggleMenu}
+                            />
+                    </div>
+                    <div className={!menu ? "hidden" : "flex fixed inset-0 bg-white z-20 w-full h-full justify-center"}>
+                        <ul className="my-10 flex items-center flex-col">
+                            <Link href="/">
+                                <a>
+                                    <li className="my-6">イベント</li>
+                                </a>
+                            </Link>
+                            <Link href="/user/details">
+                                <a>
+                                    <li className="my-6">ユーザー情報</li>
+                                </a>
                             </Link>
                             <Link href="/info/privacy">
-                                <a>プライバシーポリシー</a>
+                                <a>
+                                    <li className="my-6">団体情報</li>
+                                </a>
+                            </Link>
+                            <li className="my-6">{phoneNumber}</li>
+                            <li className="my-6">{mail}</li>
+                            <Link href="/">
+                                <a>
+                                    <li className="my-6"><img className="h-16 w-16" src="/images/logo-text.png"/></li>
+                                </a>
+                            </Link>
+                            
+                        </ul>
+                    </div>
+                    
+
+                </header>
+            </Mobile>
+            <main className="pt-10">{children}</main>
+            
+                <footer className={styles.footer}>
+                    <div className={styles.contact}>
+                        <h2 className="">{phoneNumber}</h2>
+                        <p className="">受付時間: {phoneTime}</p>
+                        <h2 className="">{mail}</h2>
+                        <p className="">受付時間： {mailTime}</p>
+                    </div>
+                    <div className={styles.footerInfo}>
+                        <div className="flex flex-col justify-center items-center">
+                            <Link href="/info/tos">
+                                <a className="my-2">利用規約</a>
+                            </Link>
+                            <Link href="/info/privacy">
+                                <a className="my-2">プライバシーポリシー</a>
                             </Link>
                             <Link href="/info/transaction">
-                                <a>特定商取引法に基づく表記</a>
+                                <a className="my-2">特定商取引法に基づく表記</a>
                             </Link>
+                            <Link href="/">
+                                <a className="my-2"><img className="h-16 w-16" src="/images/logo-text.png"/></a>
+                            </Link>
+                            <div className="">
+                                <p className="text-xs">©️2020 Takaaki Miwa</p>
+                            </div>
                         </div>
-                        <div className={styles.footerRightItems}><p>©️2020 Takaaki Miwa</p></div>
                     </div>
-                </div>
-            </footer>
+                </footer>
+            
         </div>
     )
 }
