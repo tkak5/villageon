@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"/_app":"static/development/pages/_app.js","/_document":"static/development/pages/_document.js","/_error":"static/development/pages/_error.js","/sign/signin":"static/development/pages/sign/signin.js"}
+=======
+{"/_app":"static/development/pages/_app.js","/_document":"static/development/pages/_document.js","/_error":"static/development/pages/_error.js","/index":"static/development/pages/index.js","/info/privacy":"static/development/pages/info/privacy.js","/info/tos":"static/development/pages/info/tos.js","/user/details":"static/development/pages/user/details.js","/":"static/development/pages/index.js"}
+>>>>>>> d757c9a0a22ce5848e56509e37ab0f02d27ce664
