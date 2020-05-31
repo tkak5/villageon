@@ -142,29 +142,30 @@ export default function Layout ({ children, home }) {
                     </div>
                     <div className={!menu ? "hidden" : "flex fixed inset-0 bg-white z-20 w-full h-full justify-center"}>
                         <ul className="my-10 flex items-center flex-col">
-                            <Link href="/">
-                                <a>
-                                    <li className="my-6">イベント</li>
-                                </a>
-                            </Link>
-                            <Link href="/user/details">
-                                <a>
-                                    <li className="my-6">ユーザー情報</li>
-                                </a>
-                            </Link>
-                            <Link href="/info/privacy">
-                                <a>
-                                    <li className="my-6">団体情報</li>
-                                </a>
-                            </Link>
+                            <li className="my-6">
+                                <Link href="/">
+                                    <a>イベント</a>
+                                </Link>
+                            </li>
+                            <li className="my-6">
+                                <Link href={user ? "/user/details" : "/sign/signin"}>
+                                    <a>{user ? "ユーザー情報" :"ログイン"}</a>
+                                </Link>
+                            </li>
+                            <li className="my-6">
+                                <Link href="/info/privacy">
+                                    <a>団体情報</a>
+                                </Link>
+                            </li>
                             <li className="my-6">{phoneNumber}</li>
                             <li className="my-6">{mail}</li>
-                            <Link href="/">
-                                <a>
-                                    <li className="my-6"><img className="h-16 w-16" src="/images/logo-text.png"/></li>
-                                </a>
-                            </Link>
-                            
+                            <li className="my-6">
+                                <Link href="/">
+                                    <a>
+                                        <img className="h-16 w-16" src="/images/logo-text.png"/>
+                                    </a>
+                                </Link>
+                            </li>
                         </ul>
                     </div>
                     

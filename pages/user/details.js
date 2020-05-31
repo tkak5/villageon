@@ -155,15 +155,19 @@ export default function details({ allPostsData }) {
 
     //change displayname to newer
     const submitName = event => {
-        user.updateProfile({
-            displayName: `${newLast} ${newFirst}`
-        }).then(function() {
-            setToggleId("")
-            setNewFirst("")
-            setNewLast("")
-        }) .catch(function(error) {
-            setNameError(error.message)
-        })
+        if (newLast && newFirst) {
+            user.updateProfile({
+                displayName: `${newLast} ${newFirst}`
+            }).then(function() {
+                setToggleId("")
+                setNewFirst("")
+                setNewLast("")
+            }) .catch(function(error) {
+                setNameError(error.message)
+            })
+        } else {
+            setNameError("入力してください")
+        }
     }
 
     //change email to newer
@@ -330,14 +334,24 @@ export default function details({ allPostsData }) {
         var year = today.getFullYear()
         var month = today.getMonth()+1
         var day = today.getDate()
-        if (year < Number(eventId.substr(0,4))) {
-            submitCancel(eventId, eventDate, eventPlace, eventTitle, eventGender, eventPrice)
-        } else if (year == Number(eventId.substr(0,4)) && month < Number(eventId.substr(4,2))) {
-            submitCancel(eventId, eventDate, eventPlace, eventTitle, eventGender, eventPrice)
-        } else if (month == Number(eventId.substr(4,2)) && day+3 < Number(eventId.substr(6,2))) {
-            submitCancel(eventId, eventDate, eventPlace, eventTitle, eventGender, eventPrice)
+        var eventYear = Number(eventId.substr(0,4))
+        var eventMonth = Number(eventId.substr(4,2))
+        var eventDay = Number(eventId.substr(6,2))
+        var array = [2,4,6,9,11]
+        var dayLeft
+        if (month == 2) {
+            dayLeft = 29 - day
+        } else if (array.includes(month)) {
+            dayLeft = 30 - day
         } else {
+            dayLeft = 31 - day
+        }
+        if (year == eventYear && month == eventMonth && day+3 >= eventDay) {
             setCancelErrorId(eventId)
+        } else if (year == eventYear && month+1 == eventMonth && dayLeft + eventDay <= 3) {
+            setCancelErrorId(eventId)
+        } else {
+            submitCancel(eventId, eventDate, eventPlace, eventTitle, eventGender, eventPrice)
         }
     }
 
@@ -392,106 +406,90 @@ export default function details({ allPostsData }) {
             <Head>
                 <title>details</title>
             </Head>
-            <article className={styles.userWrapper}>
-                <div className={styles.detailWrapper}>
+            <article className="bg-white p-6 mt-6 sm:max-w-lg sm:mx-auto">
+                <div className="w-full">
                     {/*name block*/}
-                    <div className={styles.contents}>
-                        <div className={styles.contentLeft}>
-                            <p className={styles.label}>名前</p>
-                            <p className={styles.link} id="name" onClick={changeId}>編集</p>
-                        </div>
-                        <div className={styles.contentRight}>
-                            <p>{user.displayName}</p>
-                            <AnimateHeight
-                                duration={300}
-                                height={toggleId === "name" ? 'auto' : 0}>
-                                <div>
-                                    <input type="text" placeholder="姓" onChange={changeLast} className={styles.inputName}/>
-                                    <input type="text" placeholder="名" onChange={changeFirst} className={styles.inputName}/>
-                                </div>
-                                <p className={styles.alert}>{nameError}</p>
-                                <input className={styles.inputButton} type="button" onClick={submitName} value="変更"/>
-                            </AnimateHeight>
-                            <div>
+                    <div className=" border-b-2 py-4">
+                        <p className="text-center">名前</p>
+                        <p className="text-center">{user.displayName}</p>
+                        <p className="text-blue-600 cursor-pointer text-xs text-center" id="name" onClick={changeId}>編集</p>
+                        <AnimateHeight
+                            duration={300}
+                            height={toggleId === "name" ? 'auto' : 0}>
+                            <div className="flex flex-col jusify-center items-center">
+                                <input type="text" placeholder="姓" onChange={changeLast} className="border-solid border-2 rounded p-2 w-full outline-none max-w-sm"/>
+                                <input type="text" placeholder="名" onChange={changeFirst} className="border-solid border-2 rounded p-2 mt-1 w-full outline-none max-w-sm"/>
+                                <p className="text-red-600 text-center">{nameError}</p>
+                                <input className="border-solid border-2 rounded p-2 mt-1 bg-blue-200　outline-none" type="button" onClick={submitName} value="変更"/>
                             </div>
-                        </div>
+                        </AnimateHeight>
                     </div>
                     {/*mail block*/}
-                    <div className={styles.contents}>
-                        <div className={styles.contentLeft}>
-                            <p className={styles.label}>メールアドレス</p>
-                            <p className={styles.link} id="mail" onClick={changeId}>編集</p>
-                        </div>
-                        <div className={styles.contentRight}>
-                            <p>{user.email}</p>
-                            <AnimateHeight
-                                duration={300}
-                                height={toggleId === "mail" ? 'auto' : 0}>
-                                <div>
-                                    <input className={styles.input} type="text" placeholder="新しいメールアドレス" onChange={changeMail}/>
+                    <div className="border-b-2 py-4">
+                        <p className="text-center">メールアドレス</p>
+                        <p className="text-center">{user.email}</p>
+                        <p className="text-blue-600 cursor-pointer text-xs text-center" id="mail" onClick={changeId}>編集</p>
+                        <AnimateHeight
+                            duration={300}
+                            height={toggleId === "mail" ? 'auto' : 0}>
+                                <div className="flex flex-col justify-center items-center">
+                                    <input className="border-solid border-2 rounded p-2 w-full outline-none max-w-sm" type="text" placeholder="新しいメールアドレス" onChange={changeMail}/>
+                                    <p className="text-red-600 text-center">{mailError}</p>
+                                    <input className="border-solid border-2 rounded p-2 mt-1 bg-blue-200　outline-none" type="button" onClick={submitMail} value="変更"/>
                                 </div>
-                                <p className={styles.alert}>{mailError}</p>
-                                <input className={styles.inputButton} type="button" onClick={submitMail} value="変更"/>
-                            </AnimateHeight>
-                            <AnimateHeight
-                                duration={300}
-                                height={reAuth ? 'auto' : 0}>
-                                    <div>
-                                        <p>時間が経っているためパスワードを入力してください</p>
-                                        <div className={styles.passBlock}>
-                                            <input className={styles.inputPass} placeholder="現在のパスワード" type={passwordToggle ? "password" : "text"} onChange={changePassword}/>
-                                            <input className={styles.passButton} type="button" onClick={togglePassword} value={passwordToggle ? "表示" : "非表示"}/>
-                                        </div>
+                        </AnimateHeight>
+                        <AnimateHeight
+                            duration={300}
+                            height={reAuth ? 'auto' : 0}>
+                                <div className="flex flex-col justify-center items-center">
+                                    <p>時間が経っているためパスワードを入力してください</p>
+                                    <div className="border-solid border-2 rounded p-2 w-full flex max-w-sm">
+                                        <input className="w-4/5 outline-none" placeholder="現在のパスワード" type={passwordToggle ? "password" : "text"} onChange={changePassword}/>
+                                        <input className="w-1/5 outline-none bg-white opacity-50" type="button" onClick={togglePassword} value={passwordToggle ? "表示" : "非表示"}/>
                                     </div>
-                                    <p className={styles.alert}>{passwordError}</p>
-                                    <input className={styles.inputButton} type="button" onClick={submitMailAfterReAuth} value="認証"/>
-                            </AnimateHeight>
-                            <div>
-                            </div>
-                        </div>
+                                    <p className="text-red-600 text-center">{passwordError}</p>
+                                    <input className="border-solid border-2 rounded p-2 mt-1 bg-blue-200　outline-none" type="button" onClick={submitMailAfterReAuth} value="認証"/>
+                                </div>
+                        </AnimateHeight>
                     </div>
                     {/*password block*/}
-                    <div className={styles.contents}>
-                        <div className={styles.contentLeft}>
-                            <p className={styles.label}>パスワード</p>
-                            <p className={styles.link} id="password" onClick={changeId}>編集</p>
-                        </div>
-                        <div className={styles.contentRight}>
-                            <p>●●●●●●</p>
-                            <AnimateHeight
-                                duration={300}
-                                height={toggleId === "password" ? 'auto' : 0}>
-                                <div className={styles.passBlock}>
-                                    <input
-                                        className={styles.inputPass}
-                                        placeholder="現在のパスワード"
-                                        type={passwordToggle ? "password" : "text"}
-                                        onChange={changePassword}/>
-                                    <input className={styles.passButton} type="button" onClick={togglePassword} value={passwordToggle ? "表示" : "非表示"}/>
+                    <div className="border-b-2 py-4">
+                        <p className="text-center">パスワード</p>
+                        <p className="text-center">●●●●●●</p>
+                        <p className="text-blue-600 cursor-pointer text-xs text-center" id="password" onClick={changeId}>編集</p>
+                        <AnimateHeight
+                            duration={300}
+                            height={toggleId === "password" ? 'auto' : 0}>
+                                <div className="flex flex-col justify-center items-center">
+                                    <div className="border-solid border-2 rounded p-2 w-full flex max-w-sm">
+                                        <input
+                                            className="w-4/5 outline-none"
+                                            placeholder="現在のパスワード"
+                                            type={passwordToggle ? "password" : "text"}
+                                            onChange={changePassword}/>
+                                        <input className="w-1/5 outline-none bg-white opacity-50" type="button" onClick={togglePassword} value={passwordToggle ? "表示" : "非表示"}/>
+                                    </div>
+                                    <p className="text-red-600 text-center">{passwordError}</p>
+                                    <div className="border-solid border-2 rounded p-2 w-full flex mt-1 max-w-sm">
+                                        <input
+                                            className="w-4/5 outline-none"
+                                            placeholder="新しいパスワード"
+                                            type={newPasswordToggle ? "password" : "text"}
+                                            onChange={changeNewPassword}/>
+                                        <input className="w-1/5 outline-none bg-white opacity-50" type="button" onClick={toggleNewPassword} value={newPasswordToggle ? "表示" : "非表示"}/>
+                                    </div>
+                                    <p className="text-red-600 text-center">{newPasswordError}</p>
+                                    <input className="border-solid border-2 rounded p-2 mt-1 bg-blue-200　outline-none" type="button" onClick={submitPasswordAfterReAuth} value="変更"/>
                                 </div>
-                                <p className={styles.alert}>{passwordError}</p>
-                                <div className={styles.passBlock}>
-                                    <input
-                                        className={styles.inputPass}
-                                        placeholder="新しいパスワード"
-                                        type={newPasswordToggle ? "password" : "text"}
-                                        onChange={changeNewPassword}/>
-                                    <input className={styles.passButton} type="button" onClick={toggleNewPassword} value={newPasswordToggle ? "表示" : "非表示"}/>
-                                </div>
-                                <p className={styles.alert}>{newPasswordError}</p>
-                                <input className={styles.inputButton} type="button" onClick={submitPasswordAfterReAuth} value="変更"/>
-                            </AnimateHeight>
-                        </div>
+                        </AnimateHeight>
                     </div>
                     {/* verifyed block */}
-                    <div className={styles.contents}>
-                        <div className={styles.contentLeft}>
-                            <p className={styles.label}>メール認証</p>
-                        </div>
-                        <div className={styles.contentRight}>
-                            <p>{user.emailVerified ? "認証済み" : "未認証"}</p>
+                    <div className="border-b-2 py-4">
+                        <div className="">
+                            <p className="text-center">メール認証</p>
+                            <p className="text-center">{user.emailVerified ? "認証済み" : "未認証"}</p>
                             <p
-                                className={user.emailVerified ? styles.none : styles.link}
+                                className="text-blue-600 cursor-pointer text-xs text-center"
                                 onClick={user.emailVerified ? handleNone : submitVerification}
                                 >
                                     {user.emailVerified ? "" : verifyMessage}
@@ -499,9 +497,9 @@ export default function details({ allPostsData }) {
                         </div>
                     </div>
                 </div>
-                <div className={styles.signOut}>
-                    <p className={styles.link} onClick={handleSignOut}>ログアウト</p>
-                    <p id="delete" className={styles.delete} onClick={changeId}>アカウントを削除する</p>
+                <div className="py-4">
+                    <p className="text-blue-600 cursor-pointer text-center" onClick={handleSignOut}>ログアウト</p>
+                    <p id="delete" className="text-red-600 cursor-pointer text-center" onClick={changeId}>アカウントを削除する</p>
                     <AnimateHeight
                         duration={300}
                         height={toggleId === "delete" ? 'auto' : 0}>
@@ -517,41 +515,41 @@ export default function details({ allPostsData }) {
                     </AnimateHeight>
                 </div>
             </article>
-            <article className={styles.userWrapper}>
-                <div className={styles.detailWrapper}>
-                    <h2>参加予定のイベントリスト</h2>
+            <article className="bg-white p-6 mt-6 mb-6 sm:max-w-lg sm:mx-auto">
+                <div className="w-full">
+                    <h2 className="text-center">参加予定のイベントリスト</h2>
                     {events ? events.map(event =>
-                            <li key={event.id} className={styles.eventList}>
+                            <li key={event.id} className="list-none border-t-2 py-4">
                                 <div>
                                     <Link href="/posts/[id]" as={`/posts/${event.id}`}>
-                                        <a>{event.title}</a>
+                                        <a><h3 className="text-blue-600 text-center">{event.title}</h3></a>
                                     </Link>
-                                    <p>{event.date}</p>
-                                    <p>{event.place}</p>
+                                    <p className="text-center">{event.date}</p>
+                                    <p className="text-center">{event.place}</p>
                                     <div className={styles.fee}>
-                                        <p className={styles.mens}>{event.gender == "man" ? "男性" : "女性"}</p>
-                                        <p>1人</p>
-                                        <p>{event.price}円</p>
+                                        <p className="text-center">{event.gender == "man" ? "男性" : "女性"}</p>
+                                        <p className="text-center">1人</p>
+                                        <p className="text-center">{event.price}円</p>
                                     </div>
                                     {cancelId !== event.id ? 
-                                        <div>
-                                            <input type="button" value="キャンセル" id={event.id} onClick={displayCancel}/>
+                                        <div className="flex flex-col justify-center items-center">
+                                            <p id={event.id} onClick={displayCancel} className="text-red-600 cursor-pointer text-center">キャンセル</p>
                                         </div>
                                     :
                                         <div>
                                             {cancelErrorId !== event.id ?
                                                 <div>
-                                                    <p>上記のイベントの予約をキャンセルしますがよろしいですか</p>
-                                                    <div>
-                                                        <input type="button" value="はい" onClick={(e) => judgeCancel(event.id, event.date, event.place, event.title, event.gender, event.price, e)}/>
-                                                        <input type="button" value="いいえ" onClick={hideCancel}/>
+                                                    <p className="text-center">上記のイベントの予約をキャンセルしますがよろしいですか</p>
+                                                    <div className="flex justify-center">
+                                                        <input className="border-solid border-2 rounded p-2 mt-1 bg-white　outline-none mx-1" type="button" value="はい" onClick={(e) => judgeCancel(event.id, event.date, event.place, event.title, event.gender, event.price, e)}/>
+                                                        <input className="border-solid border-2 rounded p-2 mt-1 bg-white　outline-none mx-1" type="button" value="いいえ" onClick={hideCancel}/>
                                                     </div>
                                                 </div>
                                             :
                                                 <div>
-                                                    <p>web上でキャンセル可能な日にちを超えています。</p>
-                                                    <p>お手数ですが以下の電話番号までご連絡ください</p>
-                                                    <p>{phoneNumber}</p>
+                                                    <p className="text-center">web上でキャンセル可能な日にちを超えています。</p>
+                                                    <p className="text-center">お手数ですが以下の電話番号までご連絡ください</p>
+                                                    <p className="text-center">{phoneNumber}</p>
                                                 </div>
                                             }
                                         </div>

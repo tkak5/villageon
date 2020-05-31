@@ -24,15 +24,13 @@ export default function Home({ allPostsData }) {
           flex justify-center flex-wrap p-6
           sm:p-0">
           {allPostsData.map(({ id, date, title }) => (
-            <li className="
-              my-4 w-full bg-white shadow h-64 flex items-center justify-center
-              sm:w-5/12 sm:mx-2
-              md:w-2/5 md:mx-2
-              lg:w-1/4">
+            <li className="w-full sm:w-5/12 md:w-2/5 lg:w-1/4 sm:mx-2 md:mx-2">
               <Link href="/posts/[id]" as={`/posts/${id}`}>
                 <a>
-                  <p className="w-full m-2">{title}</p>
-                  <p className="w-full m-2">{date}</p>
+                  <div className="my-4 w-full bg-white shadow h-64 flex items-center justify-center flex-col">
+                    <p className="w-full m-2 text-center">{title}</p>
+                    <p className="w-full m-2 text-center">{date}</p>
+                  </div>
                 </a>
               </Link>
             </li>

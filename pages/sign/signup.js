@@ -19,14 +19,13 @@ export default function SignUp () {
     const [mail, setMail] = useState("")
     const [password, setPassword] = useState("")
     const [togglePassword, setTogglePassword] = useState(false)
-    const [LastName, setLastName] = useState("")
-    const [FirstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [firstName, setFirstName] = useState("")
     const [gender, setGender] = useState("")
     //error
     const [mailError, setMailError] = useState("")
     const [passwordError, setPasswordError] = useState("")
-    const [LastNameError, setLastNameError] = useState("")
-    const [FirstNameError, setFirstNameError] = useState("")
+    const [nameError, setNameError] = useState("")
     const [genderError, setGenderError] = useState("")
     const [check, setCheck] = useState(false)
     const [alert, setAlert] = useState("")
@@ -80,8 +79,7 @@ export default function SignUp () {
         setPassword(password)
     }
     const handleSubmit = () => {
-        setFirstNameError("")
-        setLastNameError("")
+        setNameError("")
         setMailError("")
         setPasswordError("")
         setAlert("")
@@ -89,14 +87,14 @@ export default function SignUp () {
             function() {
                 var user = firebase.auth().currentUser
                 user.updateProfile({
-                    displayName: `${LastName} ${FirstName}`
+                    displayName: `${lastName} ${firstName}`
                 })
                 db.collection("users").doc(user.uid).set({
                     apllication: [],
                     admin: false,
                     gender: gender,
-                    first: FirstName,
-                    last: LastName,
+                    first: firstName,
+                    last: lastName,
                     mail: mail
                 }).then(function(){
                 }).catch(function(error){
@@ -123,17 +121,13 @@ export default function SignUp () {
     }
 
     const checkAlert = () => {
-        setFirstNameError("")
-        setLastNameError("")
+        setNameError("")
         setMailError("")
         setPasswordError("")
         setAlert("")
-        if (!FirstName) {
-            setFirstNameError("入力してください")
+        if (!firstName || !lastName) {
+            setNameError("入力してください")
             
-        } 
-        if (!LastName) {
-            setLastNameError("入力してください")
         } 
         if (!mail) {
             setMailError("入力してください")
@@ -181,35 +175,32 @@ export default function SignUp () {
             <Head>
                 <title>SignUp</title>
             </Head>
-            <article className={styles.signWrapper}>
-                <h1 className={styles.title}>アカウントの作成</h1>
-                <form className={styles.form}> 
-                    <div className={styles.nameWrapper}>
-                        <input className={styles.name} type="text" placeholder="姓" onChange={changeLastName} />
-                        <input className={styles.name} type="text" placeholder="名" onChange={changeFirstName} />
-                    </div>
-                    <div className={styles.nameWrapper}>
-                        <p className={styles.alert}>{LastNameError}</p>
-                        <p className={styles.alert}>{FirstNameError}</p>
-                    </div>
-                    <input className={styles.input} type="text" placeholder="メールアドレス" onChange={changeMail} />
-                    <p className={styles.alert}>{mailError}</p>
-                    <div className={styles.passBlock}>
-                        <input className={styles.passInput} type={togglePassword ? "text" : "password"} placeholder="パスワード" onChange={changePassword} />
-                        <input className={styles.passButton} type="button" value={togglePassword ? "非表示" : "表示"} onClick={togglePasswordDisplay}/>
-                    </div>
-                    <p className={styles.alert}>{passwordError}</p>
-                    <div className={styles.genderWrapper}>
-                        <label className={styles.genderLeft}>
-                            <input type="radio" value="男" name="gender" id="man" onChange={changeGender} />
-                            <lavel>男</lavel> 
-                        </label>
-                        <label className={styles.genderRight}>
-                            <input type="radio" value="女" name="gender" onChange={changeGender} />
-                            <lavel>女</lavel>
-                        </label>
-                    </div>
-                </form>
+            <article className="
+                flex flex-col justify-center items-center bg-white w-full my-6 p-6 shadow
+                sm:max-w-lg sm:mx-auto sm:rounded">
+                <h1 className="">アカウントの作成</h1>
+                <div className="flex flex-col w-full justify-center items-center">
+                    <input className="w-full border-solid border-2 rounded p-2 outline-none my-1 max-w-sm" type="text" placeholder="姓" onChange={changeLastName} />
+                    <input className="w-full border-solid border-2 rounded p-2 outline-none my-1 max-w-sm" type="text" placeholder="名" onChange={changeFirstName} />
+                </div>
+                <p className="text-red-600">{nameError}</p>
+                <input className="border-solid border-2 rounded p-2 w-full outline-none max-w-sm my-1" type="text" placeholder="メールアドレス" onChange={changeMail} />
+                <p className="text-red-600">{mailError}</p>
+                <div className="border-solid border-2 rounded p-2 w-full flex max-w-sm my-1">
+                    <input className="w-4/5 outline-none" type={togglePassword ? "text" : "password"} placeholder="パスワード" onChange={changePassword} />
+                    <input className="w-1/5 outline-none bg-white opacity-50" type="button" value={togglePassword ? "非表示" : "表示"} onClick={togglePasswordDisplay}/>
+                </div>
+                <p className="text-red-600">{passwordError}</p>
+                <div className="flex justify-between w-full max-w-sm">
+                    <label className="w-5/12 border-solid border-2 rounded p-2 outline-none my-1 flex items-center">
+                        <input type="radio" value="男" name="gender" id="man" onChange={changeGender} />
+                        <lavel className="pl-4">男</lavel> 
+                    </label>
+                    <label className="w-5/12 border-solid border-2 rounded p-2 outline-none my-1 flex items-center">
+                        <input type="radio" value="女" name="gender" onChange={changeGender} />
+                        <lavel className="pl-4">女</lavel>
+                    </label>
+                </div>
                 <div className={styles.agree}>
                     <input id="agree" className="checkBox" type="checkbox" onClick={toggleChack} />
                     <label for="agree">利用規約、プライバシーポリシーに同意する</label>
@@ -218,15 +209,13 @@ export default function SignUp () {
                 <Link href="/info/privacy"><a className={styles.link} target="blank">プライバシーポリシー</a></Link>
                 <p className={styles.alert}>{alert}</p>
                 <input
-                    className={check && FirstName && LastName && mail && password && gender ? styles.checked : styles.unChecked}
+                    className="border-none rounded p-2 w-full outline-none max-w-sm my-1 bg-blue-200 cursor-pointer"
                     type="button"
                     value="作成する"
-                    onClick={check && FirstName && LastName && mail && password && gender ? handleSubmit : checkAlert} />
-                <div className={styles.bottom}>
-                    <Link href="/sign/signin">
-                        <a><button className={styles.button}>ログイン</button></a>
-                    </Link>
-                </div>
+                    onClick={check && firstName && lastName && mail && password && gender ? handleSubmit : checkAlert} />
+                <Link href="/sign/signin">
+                    <a className="w-full max-w-sm my-4"><input type="button" value="ログイン" className="cursor-pointer border-solid border-2 rounded p-2 w-full outline-none max-w-sm my-1 bg-white"/></a>
+                </Link>
             </article>
         </Layout>
     )

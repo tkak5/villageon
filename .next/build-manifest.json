@@ -20,23 +20,11 @@
     "/_polyfills": [
       "static/runtime/polyfills.js"
     ],
-<<<<<<< HEAD
     "/sign/signin": [
-=======
-    "/index": [
-      "static/runtime/webpack.js",
-      "static/runtime/main.js"
-    ],
-    "/info/privacy": [
-      "static/runtime/webpack.js",
-      "static/runtime/main.js"
-    ],
-    "/info/tos": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],
     "/user/details": [
->>>>>>> d757c9a0a22ce5848e56509e37ab0f02d27ce664
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ]

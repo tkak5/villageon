@@ -13,11 +13,10 @@ require('firebase/auth')
 initFirebase()
 
 export default function SignIn () {
-    const [mail, setMail] = useState([])
-    const [password, setPassword] = useState([])
-    const [MailError, setMailError] = useState("")
-    const [PasswordError, setPasswordError] = useState("")
-    const [error, setError] = useState("sample")
+    const [mail, setMail] = useState("")
+    const [password, setPassword] = useState("")
+    const [mailError, setMailError] = useState("")
+    const [passwordError, setPasswordError] = useState("")
     const [mount, setMount] = useState(true)
     const [togglePassword, setTogglePassword] = useState(false)
 
@@ -50,11 +49,16 @@ export default function SignIn () {
     const handleSubmit = () => {
         setMailError("")
         setPasswordError("")
-        firebase.auth().signInWithEmailAndPassword(mail, password).then(
-            function() {
+        if (!mail) {
+            setMailError("入力してください")
+        }
+        if (!password) {
+            setPasswordError("入力してください")
+        }
+        if (mail && password) {
+            firebase.auth().signInWithEmailAndPassword(mail, password).then(function() {
                 Router.push("/user/details")
-            }).catch(
-            function(error) {
+            }).catch(function(error) {
                 if (error.code == "auth/invalid-email") {
                     setMailError("メールアドレスの形式が不正確です")
                 } else if (error.code == "auth/user-disabled") {
@@ -65,6 +69,7 @@ export default function SignIn () {
                     setPasswordError("パスワードが間違っています")
                 }
             })
+        }
     }
 
     const togglePasswordDisplay = () => {
@@ -76,23 +81,21 @@ export default function SignIn () {
             <Head>
                 <title>SignIn</title>
             </Head>
-                <article className={styles.signWrapper}>
-                    <h1 className={styles.title}>ログイン</h1>
-                    <form className={styles.form}>
-                        <input className={styles.input} type="text" placeholder="email" onChange={changeMail} />
-                        <p className={styles.alert}>{MailError}</p>
-                        <div className={styles.passBlock}>
-                            <input className={styles.passInput} type={togglePassword ? "text" : "password"} placeholder="パスワード" onChange={changePassword} />
-                            <input className={styles.passButton} type="button" value={togglePassword ? "非表示" : "表示"} onClick={togglePasswordDisplay}/>
-                        </div>
-                        <p className={styles.alert}>{PasswordError}</p>
-                        <input className={styles.checked} type="button" value="ログイン" onClick={handleSubmit} />
-                    </form>
-                    <div className={styles.bottom}>
-                        <Link href="/sign/signup" >
-                            <a><button className={styles.button}>アカウントを作成する</button></a>
-                        </Link>
+                <article className="
+                    flex flex-col justify-center items-center bg-white w-full my-6 p-6 shadow
+                    sm:max-w-lg sm:mx-auto sm:rounded">
+                    <h1 className="text-center">ログイン</h1>
+                    <input className="border-solid border-2 rounded p-2 w-full outline-none max-w-sm my-1" type="text" placeholder="email" onChange={changeMail} />
+                    <p className="text-red-600">{mailError}</p>
+                    <div className="border-solid border-2 rounded p-2 w-full flex max-w-sm my-1">
+                        <input className="w-4/5 outline-none" type={togglePassword ? "text" : "password"} placeholder="パスワード" onChange={changePassword} />
+                        <input className="w-1/5 outline-none bg-white opacity-50" type="button" value={togglePassword ? "非表示" : "表示"} onClick={togglePasswordDisplay}/>
                     </div>
+                    <p className="text-red-600">{passwordError}</p>
+                    <input className="border-none rounded p-2 w-full outline-none max-w-sm my-1 bg-blue-200 cursor-pointer" type="button" value="ログイン" onClick={handleSubmit} />
+                    <Link href="/sign/signup">
+                        <a className="w-full max-w-sm my-4"><input type="button" value="アカウントを作成する" className="cursor-pointer border-solid border-2 rounded p-2 w-full outline-none max-w-sm my-1 bg-white"/></a>
+                    </Link>
                 </article>
         </Layout>
     )
