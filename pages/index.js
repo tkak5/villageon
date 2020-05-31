@@ -21,7 +21,7 @@ export default function Home({ allPostsData }) {
       </Head>
       <section>
         <ul className="
-          flex justify-center flex-wrap p-6
+          flex justify-center flex-wrap p-6 my-6
           sm:p-0">
           {allPostsData.map(({ id, date, title }) => (
             <li className="w-full sm:w-5/12 md:w-2/5 lg:w-1/4 sm:mx-2 md:mx-2">

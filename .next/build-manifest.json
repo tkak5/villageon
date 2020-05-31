@@ -9,6 +9,10 @@
     "static/development/_ssgManifest.js"
   ],
   "pages": {
+    "/": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
     "/_app": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
@@ -20,7 +24,23 @@
     "/_polyfills": [
       "static/runtime/polyfills.js"
     ],
-    "/sign/signin": [
+    "/index": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
+    "/info/privacy": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
+    "/info/tos": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
+    "/info/transaction": [
+      "static/runtime/webpack.js",
+      "static/runtime/main.js"
+    ],
+    "/posts/[id]": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],

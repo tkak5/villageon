@@ -79,12 +79,12 @@ export default function Layout ({ children, home }) {
             </Head>
             <Default>
                 <header className={styles.header}>
-                    <div className={styles.logoSpace}>
+                    <div className="flex fixed top-0 left-0 h-10 justify-center items-center z-30 px-6">
                         <Link href="/">
                             <a>
                                 <img
                                     src="/images/logo-no-text.png"
-                                    className={styles.headerImage}
+                                    className="h-8 w-8"
                                     alt={siteTitle}
                                 />
                             </a>
