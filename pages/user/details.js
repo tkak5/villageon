@@ -1,4 +1,6 @@
 import Layout, { phoneNumber, url }from '../../components/layout'
+import Application from '../../components/user/application'
+import Admin from '../../components/user/admin'
 import Head from 'next/head'
 import styles from '../../styles/user.module.scss'
 import { useState, useEffect } from 'react'
@@ -19,11 +21,19 @@ var getOptions = {
     source: 'cache'
 }
 
+
+
 export async function getStaticProps() {
-    const allPostsData = getSortedPostsData()
+    const allEventsData = await db.collection('events').orderBy("date").get().then(function(querySnapshot) {
+        var datas = []
+        querySnapshot.docs.forEach(doc => {
+          datas.push(doc.data())
+        })
+        return datas
+    })
     return {
       props: {
-        allPostsData
+        allEventsData
       }
     }
   }
@@ -31,7 +41,7 @@ export async function getStaticProps() {
 
 
 
-export default function details({ allPostsData }) {
+  export default function details({ allEventsData }) {
     const [user, setUser] = useState("")
     const [verifyMessage, setVerifyMessage] = useState("認証メールを送る")
     const [toggleId, setToggleId] = useState("")
@@ -50,25 +60,11 @@ export default function details({ allPostsData }) {
     const [newPasswordError, setNewPasswordError] = useState("")
     const [passwordToggle, setPasswordToggle] = useState(true)
     const [newPasswordToggle, setNewPasswordToggle] = useState(true)
-    //database
-    const [admin, setAdmin] = useState(false) 
-    const [events, setEvents] = useState([])
     //useEffect
     const [mount, setMount] = useState(true)
-    //cancel
-    const [cancelId, setCancelId] = useState("")
-    const [canceledId, setCanceledId] = useState([])
-    const [cancelErrorId, setCancelErrorId] = useState([])
-    //admin
-    const [mensName, setMensName] = useState({})
-    const [womensName, setWomensName] = useState({})
-    const [mensEmail, setMensEmail] = useState({})
-    const [womensEmail, setWomensEmail] = useState({})
-    const [eventId, setEventId] = useState("")
-    const [eventMensName, setEventMensName] = useState([])
-    const [eventMensMail, setEventMensMail] = useState([])
-    const [eventWomensName, setEventWomensName] = useState([])
-    const [eventWomensMail, setEventWomensMail] = useState([])
+    const [update, setUpdate] = useState(false)
+    //database
+    const [userData, setUserData] = useState("")
 
     
 
@@ -79,6 +75,12 @@ export default function details({ allPostsData }) {
                 if (user) {
                     // User is signed in.
                     setUser(user)
+                    db.collection('users').doc(user.uid).get().then(function(doc) {
+                        if (doc.exists) {
+                            setUserData(doc.data())
+                        }
+                        setMount(false)
+                    })
                 } else {
                     if (process.browser) {
                         Router.push("/")
@@ -86,63 +88,10 @@ export default function details({ allPostsData }) {
                     // No user is signed in.
                 }
             })
-            if (user) {
-                db.collection("users").doc(user.uid).get().then(function(doc) {
-                    if (doc.exists) {
-                        setEvents(doc.data().events)
-                        setAdmin(doc.data().admin)
-                        if (admin) {
-                            var mensName = {}
-                            const womensName = {}
-                            const mensEmail = {}
-                            const womensEmail = {}
-                            db.collection('events').get().then(function(querySnapshot) {
-                                querySnapshot.docs.forEach(doc => {
-                                    const nameForMens = []
-                                    const emailForMens = []
-                                    doc.data().mens.forEach(man => {
-                                        nameForMens.push(man.name)
-                                        emailForMens.push(man.mail)
-                                    })
-                                    
-                                    const nameForWomens = []
-                                    const emailForWomens = []
-                                    doc.data().womens.forEach(woman => {
-                                        nameForWomens.push(woman.name)
-                                        emailForWomens.push(woman.mail)
-                                    })
-                                    
-                                    mensName[doc.id] = nameForMens
-                                    mensEmail[doc.id] = emailForMens
-                                                                        
-                                    womensName[doc.id] = nameForWomens
-                                    womensEmail[doc.id] = emailForWomens
-                                })
-                                setMensName(mensName)
-                                setMensEmail(mensEmail)
-                                
-                                setWomensName(womensName)
-                                setWomensEmail(womensEmail)
-                                
-                            })
-                        }
-                        setMount(false)
-                    } else {
-                    }
-                })
-            }
         }        
     })
 
-    useEffect(() => {
-        if (user) {
-            db.collection("users").doc(user.uid).get().then(function(doc) {
-                if (doc.exists) {
-                    setEvents(doc.data().events)
-                }
-            })
-        }
-    },[canceledId])
+
     
 
     const changeFirst = event => {
@@ -319,98 +268,24 @@ export default function details({ allPostsData }) {
             })
     }
 
-
-    //apper display to cancel
-    const displayCancel = () => {
-        var id = event.target.id
-        setCancelId(id)
-    }
-    const hideCancel = () => {
-        setCancelId("")
+    const updateEvents = () => {
+        setUpdate(true)
     }
 
-    const judgeCancel = (eventId, eventDate, eventPlace, eventTitle, eventGender, eventPrice) => {
-        var today = new Date()
-        var year = today.getFullYear()
-        var month = today.getMonth()+1
-        var day = today.getDate()
-        var eventYear = Number(eventId.substr(0,4))
-        var eventMonth = Number(eventId.substr(4,2))
-        var eventDay = Number(eventId.substr(6,2))
-        var array = [2,4,6,9,11]
-        var dayLeft
-        if (month == 2) {
-            dayLeft = 29 - day
-        } else if (array.includes(month)) {
-            dayLeft = 30 - day
-        } else {
-            dayLeft = 31 - day
-        }
-        if (year == eventYear && month == eventMonth && day+3 >= eventDay) {
-            setCancelErrorId(eventId)
-        } else if (year == eventYear && month+1 == eventMonth && dayLeft + eventDay <= 3) {
-            setCancelErrorId(eventId)
-        } else {
-            submitCancel(eventId, eventDate, eventPlace, eventTitle, eventGender, eventPrice)
-        }
-    }
 
-    const submitCancel = (eventId, eventDate, eventPlace, eventTitle, eventGender, eventPrice) => {
-        db.collection("users").doc(user.uid).update({
-            events: firebase.firestore.FieldValue.arrayRemove({
-                id: eventId,
-                date: eventDate,
-                place: eventPlace,
-                title: eventTitle,
-                gender: eventGender,
-                price: eventPrice
-            })
-        }).then(function(){
-            setCanceledId(eventId)
-        }).catch(function(error){
-        })
-        if (eventGender == "man") {
-            db.collection("events").doc(cancelId).update({
-                mens: firebase.firestore.FieldValue.arrayRemove({
-                    id: user.uid,
-                    mail: user.email,
-                    name: user.displayName,
-                })
-            }).then(function(){
-            }).catch(function(error){
-            })
-        } else {
-            db.collection("events").doc(cancelId).update({
-                womens: firebase.firestore.FieldValue.arrayRemove({
-                    id: user.uid,
-                    mail: user.email,
-                    name: user.displayName,
-                })
-            }).then(function(){
-            }).catch(function(error){
-            })
-        }
-    }
 
-    const changeEventId = (event) => {
-        var id = event.target.id
-        setEventId(id)
-        setEventMensName(mensName[id])
-        setEventMensMail(mensEmail[id])
-        setEventWomensName(womensName[id])
-        setEventWomensMail(womensEmail[id])
-    }
 
     return (
         <Layout>
             <Head>
                 <title>details</title>
             </Head>
+            <div className="">
             <article className="bg-white p-6 mt-6 sm:max-w-lg sm:mx-auto">
                 <div className="w-full">
                     {/*name block*/}
                     <div className=" border-b-2 py-4">
-                        <p className="text-center">名前</p>
+                        <p className="text-center font-semibold">名前</p>
                         <p className="text-center">{user.displayName}</p>
                         <p className="text-blue-600 cursor-pointer text-xs text-center" id="name" onClick={changeId}>編集</p>
                         <AnimateHeight
@@ -426,7 +301,7 @@ export default function details({ allPostsData }) {
                     </div>
                     {/*mail block*/}
                     <div className="border-b-2 py-4">
-                        <p className="text-center">メールアドレス</p>
+                        <p className="text-center font-semibold">メールアドレス</p>
                         <p className="text-center">{user.email}</p>
                         <p className="text-blue-600 cursor-pointer text-xs text-center" id="mail" onClick={changeId}>編集</p>
                         <AnimateHeight
@@ -454,7 +329,7 @@ export default function details({ allPostsData }) {
                     </div>
                     {/*password block*/}
                     <div className="border-b-2 py-4">
-                        <p className="text-center">パスワード</p>
+                        <p className="text-center font-semibold">パスワード</p>
                         <p className="text-center">●●●●●●</p>
                         <p className="text-blue-600 cursor-pointer text-xs text-center" id="password" onClick={changeId}>編集</p>
                         <AnimateHeight
@@ -486,7 +361,7 @@ export default function details({ allPostsData }) {
                     {/* verifyed block */}
                     <div className="border-b-2 py-4">
                         <div className="">
-                            <p className="text-center">メール認証</p>
+                            <p className="text-center font-semibold">メール認証</p>
                             <p className="text-center">{user.emailVerified ? "認証済み" : "未認証"}</p>
                             <p
                                 className="text-blue-600 cursor-pointer text-xs text-center"
@@ -515,99 +390,32 @@ export default function details({ allPostsData }) {
                     </AnimateHeight>
                 </div>
             </article>
-            <article className="bg-white p-6 mt-6 mb-6 sm:max-w-lg sm:mx-auto">
-                <div className="w-full">
-                    <h2 className="text-center">参加予定のイベントリスト</h2>
-                    {events ? events.map(event =>
-                            <li key={event.id} className="list-none border-t-2 py-4">
-                                <div>
-                                    <Link href="/posts/[id]" as={`/posts/${event.id}`}>
-                                        <a><h3 className="text-blue-600 text-center">{event.title}</h3></a>
-                                    </Link>
-                                    <p className="text-center">{event.date}</p>
-                                    <p className="text-center">{event.place}</p>
-                                    <div className={styles.fee}>
-                                        <p className="text-center">{event.gender == "man" ? "男性" : "女性"}</p>
-                                        <p className="text-center">1人</p>
-                                        <p className="text-center">{event.price}円</p>
-                                    </div>
-                                    {cancelId !== event.id ? 
-                                        <div className="flex flex-col justify-center items-center">
-                                            <p id={event.id} onClick={displayCancel} className="text-red-600 cursor-pointer text-center">キャンセル</p>
-                                        </div>
-                                    :
-                                        <div>
-                                            {cancelErrorId !== event.id ?
-                                                <div>
-                                                    <p className="text-center">上記のイベントの予約をキャンセルしますがよろしいですか</p>
-                                                    <div className="flex justify-center">
-                                                        <input className="border-solid border-2 rounded p-2 mt-1 bg-white　outline-none mx-1" type="button" value="はい" onClick={(e) => judgeCancel(event.id, event.date, event.place, event.title, event.gender, event.price, e)}/>
-                                                        <input className="border-solid border-2 rounded p-2 mt-1 bg-white　outline-none mx-1" type="button" value="いいえ" onClick={hideCancel}/>
-                                                    </div>
-                                                </div>
-                                            :
-                                                <div>
-                                                    <p className="text-center">web上でキャンセル可能な日にちを超えています。</p>
-                                                    <p className="text-center">お手数ですが以下の電話番号までご連絡ください</p>
-                                                    <p className="text-center">{phoneNumber}</p>
-                                                </div>
-                                            }
-                                        </div>
-                                    }
-                                </div>
-                            </li>
-                    ) : ""}
-                </div>
-                {admin ?
-                    <div className={styles.detailWrapper}>
-                        <h2>イベントリスト</h2>
-                        <ul className={styles.mainWrapper}>
-                            {allPostsData.map(({ id, date, title }) => (
-                                
-                                <li className={styles.eventList} key={`admin${id}`}>
-                                    <h3>{title}</h3>
-                                    <p>{date}</p>
-                                    <p onClick={changeEventId} id={id} className={styles.link}>詳細</p>
-                                    {eventId == id ? 
-                                        <div>
-                                            <p>合計人数 {eventMensName.length + eventWomensName.length}人</p>
-                                            <p>男性参加者</p>
-                                            <div className={styles.adminUsers}>
-                                                <div className={styles.adminName}>
-                                                    {eventMensName.map((name) => (
-                                                        <p>{name}</p>
-                                                    ))}
-                                                </div>
-                                                <div className={styles.adminMail}>
-                                                    {eventMensMail.map((mail) => (
-                                                        <p>{mail}</p>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                            <p>女性参加者</p>
-                                            <div className={styles.adminUsers}>
-                                                <div className={styles.adminName}>
-                                                    {eventWomensName.map((name) => (
-                                                        <p>{name}</p>
-                                                    ))}
-                                                </div>
-                                                <div className={styles.adminMail}>
-                                                    {eventWomensMail.map((mail) => (
-                                                        <p>{mail}</p>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    :
-                                    <div></div>}
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                :
-                <div></div>
+            <Application
+                events={allEventsData}
+                user={user}
+            />
+            {userData.admin &&
+                <Admin
+                    events={allEventsData}
+                    user={user}
+                    updateEvents={updateEvents}
+                />
+            }
+            <style jsx>{`
+                .sample {
+                    animation: rotation 2s ease 0s 1 alternate none running;                  
+                } 
+                @keyframes rotation {
+                    0% {
+                        opacity:0;
+                    }
+                    100% {
+                        opacity:1;
+                    }
                 }
-            </article>
+            `}
+            </style>
+            </div>
         </Layout>
     )
 }

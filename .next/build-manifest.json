@@ -28,22 +28,6 @@
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],
-    "/info/privacy": [
-      "static/runtime/webpack.js",
-      "static/runtime/main.js"
-    ],
-    "/info/tos": [
-      "static/runtime/webpack.js",
-      "static/runtime/main.js"
-    ],
-    "/info/transaction": [
-      "static/runtime/webpack.js",
-      "static/runtime/main.js"
-    ],
-    "/posts/[id]": [
-      "static/runtime/webpack.js",
-      "static/runtime/main.js"
-    ],
     "/user/details": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"

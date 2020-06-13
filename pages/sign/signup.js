@@ -187,7 +187,7 @@ export default function SignUp () {
                 <input className="border-solid border-2 rounded p-2 w-full outline-none max-w-sm my-1" type="text" placeholder="メールアドレス" onChange={changeMail} />
                 <p className="text-red-600">{mailError}</p>
                 <div className="border-solid border-2 rounded p-2 w-full flex max-w-sm my-1">
-                    <input className="w-4/5 outline-none" type={togglePassword ? "text" : "password"} placeholder="パスワード" onChange={changePassword} />
+                    <input className="w-4/5 outline-none" type={togglePassword ? "text" : "password"} placeholder="パスワード(半角英数字記号6~32文字)" onChange={changePassword} />
                     <input className="w-1/5 outline-none bg-white opacity-50" type="button" value={togglePassword ? "非表示" : "表示"} onClick={togglePasswordDisplay}/>
                 </div>
                 <p className="text-red-600">{passwordError}</p>

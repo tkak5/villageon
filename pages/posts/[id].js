@@ -18,7 +18,21 @@ var db = firebase.firestore()
 
 export async function getStaticPaths () {
     //return a list of possible value for id
-    const paths = getAllPostIds()
+    const ids = await db.collection('events').get().then(function(querySnapshot) {
+        var ids = []
+        querySnapshot.docs.forEach(doc => {
+          ids.push(doc.id)
+        })
+        return ids
+    })
+    const paths = ids.map(id => {
+        return {
+            params: {
+                id: id
+            }
+        }
+    })
+    //const paths = getAllPostIds()
     return {
         paths,
         fallback: false
@@ -27,19 +41,24 @@ export async function getStaticPaths () {
 
 export async function getStaticProps({params}) {
     //fetch necessary data for 
-    const postData = await getPostData(params.id)
+    const eventData = await db.collection('events').doc(params.id).get().then(function(doc) {
+        if (doc.exists) {
+            return doc.data()
+        }
+    })
+    //const postData = await getPostData(params.id)
     const attention = await getAttention()
     const ban = await getBan()
     return {
         props: {
-            postData,
+            eventData,
             attention,
             ban
         }
     }
 }
 
-export default function Post ({postData, attention, ban}) {
+export default function Post ({eventData, attention, ban}) {
     const [user, setUser] = useState("")
     const [first, setFirst] = useState("")
     const [last, setLast] = useState("")
@@ -48,6 +67,7 @@ export default function Post ({postData, attention, ban}) {
     const [display, setDisplay] = useState(false)
     const [applied, setApplied] = useState(false)
     const [verification, setVerification] = useState(false)
+    const [error, setError] = useState("")
 
     firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
@@ -73,20 +93,8 @@ export default function Post ({postData, attention, ban}) {
     })
 
     const submitApplication = (event) => {
-        db.collection("users").doc(user.uid).update({
-            events: firebase.firestore.FieldValue.arrayUnion({
-                id: postData.id, 
-                date: postData.date, 
-                place: postData.place,
-                title: postData.title,
-                gender: gender,
-                price: gender == "man" ? postData.mensPrice : postData.womensPrice
-            })
-        }).then(function(){
-        }).catch(function(error){
-        })
         if (gender == "man") {
-            db.collection("events").doc(postData.id).update({
+            db.collection("events").doc(eventData.id).update({
                 mens: firebase.firestore.FieldValue.arrayUnion({
                     id: user.uid,
                     mail: user.email,
@@ -95,9 +103,10 @@ export default function Post ({postData, attention, ban}) {
             }).then(function(){
                 setApplied(true)
             }).catch(function(error){
+                setError(error.message)
             })
         } else {
-            db.collection("events").doc(postData.id).update({
+            db.collection("events").doc(eventData.id).update({
                 womens: firebase.firestore.FieldValue.arrayUnion({
                     id: user.uid,
                     mail: user.email,
@@ -123,7 +132,7 @@ export default function Post ({postData, attention, ban}) {
 
     const submitVerification = ()　=> {
         var actionCodeSettings = {
-            url: `http://localhost:3000/posts/${postData.id}`,
+            url: `http://localhost:3000/posts/${eventData.id}`,
         }
         user.sendEmailVerification(actionCodeSettings).then(
             function() {
@@ -135,27 +144,27 @@ export default function Post ({postData, attention, ban}) {
     return (
         <Layout>
             <Head>
-                <title>{postData.title}</title>
+                <title>{eventData.title}</title>
             </Head>
             <article className={styles.articleWrapper}>
                 <div className={styles.meta}>
-                    <h1>{postData.title}</h1>
-                    <p>日時 {postData.date}</p>
-                    <p>場所 {postData.place}</p>
-                    <p>住所 {postData.address}</p>
+                    <h1>{eventData.title}</h1>
+                    <p>日時 {eventData.date}</p>
+                    <p>場所 {eventData.place}</p>
+                    <p>住所 {eventData.address}</p>
                     <div className={styles.feeWrapper}>
                         {!display ? 
                             <div>
                                 <div className={styles.fee}>
                                     <p className={styles.mens}>男性</p>
                                     <p>1人</p>
-                                    <p>{postData.mensPrice}円</p>
+                                    <p>{eventData.mensPrice}円</p>
                                     <input id="man" type="button" value="予約" onClick={displayPurchase}/>
                                 </div>
                                 <div className={styles.fee}>
                                     <p className={styles.womens}>女性</p>
                                     <p>1人</p>
-                                    <p>{postData.womensPrice}円</p>
+                                    <p>{eventData.womensPrice}円</p>
                                     <input id="woman" type="button" value="予約" onClick={displayPurchase}/>
                                 </div>
                             </div>
@@ -170,13 +179,13 @@ export default function Post ({postData, attention, ban}) {
                                             <div className={styles.fee}>
                                                 <p className={styles.mens}>男性</p>
                                                 <p>1人</p>
-                                                <p>{postData.mensPrice}円</p>
+                                                <p>{eventData.mensPrice}円</p>
                                             </div>
                                         :
                                             <div className={styles.fee}>
                                                 <p className={styles.womens}>女性</p>
                                                 <p>1人</p>
-                                                <p>{postData.womensPrice}円</p>
+                                                <p>{eventData.womensPrice}円</p>
                                             </div>
                                         }
                                         <p>以上に間違いがないかを確認したのち、下のボタンをクリックしてください</p>
@@ -207,13 +216,14 @@ export default function Post ({postData, attention, ban}) {
                                 </p>
                             </div>
                         }
+                        <p>{error}</p>
                     </div>
                 </div>
                 <div className={styles.requirement}>
                     <h2>参加条件</h2>
                     <div className={styles.reqDetails}>
-                        <div className={styles.reqContent}><p>男性 {postData.mensRequirement}</p></div>
-                        <div className={styles.reqContent}><p>女性 {postData.womensRequirement}</p></div>
+                        <div className={styles.reqContent}><p>男性 {eventData.mensRequirement}</p></div>
+                        <div className={styles.reqContent}><p>女性 {eventData.womensRequirement}</p></div>
                     </div>
                     <p>
                         <strong>
@@ -229,7 +239,9 @@ export default function Post ({postData, attention, ban}) {
                     <p>開催3日前より当団体既定のキャンセル料金が発生し、web上でのキャンセルができません。以下の電話番号までご連絡ください。</p>
                     <p>{phoneNumber}</p>
                 </div>
-                <div className={styles.content} dangerouslySetInnerHTML={{ __html: postData.contentHtml }}/>
+                <div className={styles.content}>
+                    <p>{eventData.content}</p>
+                </div>
                 <div className={styles.attention}>
                     <h2>注意事項</h2>
                     <div dangerouslySetInnerHTML={{ __html: attention.contentHtml }}/>
