@@ -1,8 +1,9 @@
-import Layout, {phoneNumber} from '../../components/layout'
+import Layout, {phoneNumber, url} from '../../components/layout'
 import Head from 'next/head'
 import styles from '../../styles/posts.module.scss'
 import { getAllPostIds, getPostData, getAttention, getBan } from '../../lib/posts'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 
 import initFirebase from '../../components/initFirebase'
@@ -40,12 +41,14 @@ export async function getStaticPaths () {
 }
 */
 
-export async function getServerSideProps({params}) {
+export async function getServerSideProps() {
     //fetch necessary data for 
-    const eventData = await db.collection('events').doc(params.id).get().then(function(doc) {
-        if (doc.exists) {
-            return doc.data()
-        }
+    const eventData = await db.collection('events').orderBy("date").get().then(function(querySnapshot) {
+        var datas = {}
+        querySnapshot.docs.forEach(doc => {
+          datas[doc.id] = doc.data()
+        })
+        return datas
     })
     //const postData = await getPostData(params.id)
     const attention = await getAttention()
@@ -60,6 +63,9 @@ export async function getServerSideProps({params}) {
 }
 
 export default function Post ({eventData, attention, ban}) {
+    const router = useRouter()
+    const { pid } = router.query
+
     const [user, setUser] = useState("")
     const [first, setFirst] = useState("")
     const [last, setLast] = useState("")
@@ -95,7 +101,7 @@ export default function Post ({eventData, attention, ban}) {
 
     const submitApplication = (event) => {
         if (gender == "man") {
-            db.collection("events").doc(eventData.id).update({
+            db.collection("events").doc(eventData[pid].id).update({
                 mens: firebase.firestore.FieldValue.arrayUnion({
                     id: user.uid,
                     mail: user.email,
@@ -107,7 +113,7 @@ export default function Post ({eventData, attention, ban}) {
                 setError(error.message)
             })
         } else {
-            db.collection("events").doc(eventData.id).update({
+            db.collection("events").doc(eventData[pid].id).update({
                 womens: firebase.firestore.FieldValue.arrayUnion({
                     id: user.uid,
                     mail: user.email,
@@ -133,7 +139,7 @@ export default function Post ({eventData, attention, ban}) {
 
     const submitVerification = ()　=> {
         var actionCodeSettings = {
-            url: `http://localhost:3000/posts/${eventData.id}`,
+            url: `${url}${eventData[pid].id}`,
         }
         user.sendEmailVerification(actionCodeSettings).then(
             function() {
@@ -145,27 +151,27 @@ export default function Post ({eventData, attention, ban}) {
     return (
         <Layout>
             <Head>
-                <title>{eventData.title}</title>
+                <title>{eventData[pid].title}</title>
             </Head>
             <article className={styles.articleWrapper}>
                 <div className={styles.meta}>
-                    <h1>{eventData.title}</h1>
-                    <p>日時 {eventData.date}</p>
-                    <p>場所 {eventData.place}</p>
-                    <p>住所 {eventData.address}</p>
+                    <h1>{eventData[pid].title}</h1>
+                    <p>日時 {eventData[pid].date}</p>
+                    <p>場所 {eventData[pid].place}</p>
+                    <p>住所 {eventData[pid].address}</p>
                     <div className={styles.feeWrapper}>
                         {!display ? 
                             <div>
                                 <div className={styles.fee}>
                                     <p className={styles.mens}>男性</p>
                                     <p>1人</p>
-                                    <p>{eventData.mensPrice}円</p>
+                                    <p>{eventData[pid].mensPrice}円</p>
                                     <input id="man" type="button" value="予約" onClick={displayPurchase}/>
                                 </div>
                                 <div className={styles.fee}>
                                     <p className={styles.womens}>女性</p>
                                     <p>1人</p>
-                                    <p>{eventData.womensPrice}円</p>
+                                    <p>{eventData[pid].womensPrice}円</p>
                                     <input id="woman" type="button" value="予約" onClick={displayPurchase}/>
                                 </div>
                             </div>
@@ -180,13 +186,13 @@ export default function Post ({eventData, attention, ban}) {
                                             <div className={styles.fee}>
                                                 <p className={styles.mens}>男性</p>
                                                 <p>1人</p>
-                                                <p>{eventData.mensPrice}円</p>
+                                                <p>{eventData[pid].mensPrice}円</p>
                                             </div>
                                         :
                                             <div className={styles.fee}>
                                                 <p className={styles.womens}>女性</p>
                                                 <p>1人</p>
-                                                <p>{eventData.womensPrice}円</p>
+                                                <p>{eventData[pid].womensPrice}円</p>
                                             </div>
                                         }
                                         <p>以上に間違いがないかを確認したのち、下のボタンをクリックしてください</p>
@@ -223,8 +229,8 @@ export default function Post ({eventData, attention, ban}) {
                 <div className={styles.requirement}>
                     <h2>参加条件</h2>
                     <div className={styles.reqDetails}>
-                        <div className={styles.reqContent}><p>男性 {eventData.mensRequirement}</p></div>
-                        <div className={styles.reqContent}><p>女性 {eventData.womensRequirement}</p></div>
+                        <div className={styles.reqContent}><p>男性 {eventData[pid].mensRequirement}</p></div>
+                        <div className={styles.reqContent}><p>女性 {eventData[pid].womensRequirement}</p></div>
                     </div>
                     <p>
                         <strong>
@@ -241,7 +247,7 @@ export default function Post ({eventData, attention, ban}) {
                     <p>{phoneNumber}</p>
                 </div>
                 <div className={styles.content}>
-                    <p>{eventData.content}</p>
+                    <p>{eventData[pid].content}</p>
                 </div>
                 <div className={styles.attention}>
                     <h2>注意事項</h2>

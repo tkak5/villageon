@@ -76,7 +76,7 @@ function Event (props) {
             <div className="list-none border-t-2 py-4">
                 <div>
                     <div>
-                        <Link href="/posts/[id]" as={`/posts/${props.event.id}`}>
+                        <Link href="/posts/[pid]" as={`/posts/${props.event.id}`}>
                             <a><h3 className="text-blue-600 text-center">{props.event.title}</h3></a>
                         </Link>
                         <p className="text-center">{props.event.date}</p>

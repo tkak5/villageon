@@ -45,7 +45,7 @@ export default function Home({ allEventsData }) {
           flex justify-center flex-wrap p-6 my-6">
           {allEventsData.map((event) => (
             <li className="w-full sm:w-1/2 lg:w-1/3 sm:p-2 lg:p-4" key={event.id}>
-              <Link href="/posts/[id]" as={`/posts/${event.id}`}>
+              <Link href="/posts/[pid]" as={`/posts/${event.id}`}>
                 <a>
                   <div className="my-4 w-full bg-white shadow h-64 flex items-center justify-center flex-col">
                     <p className="w-full m-2 text-center">{event.title}</p>
