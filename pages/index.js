@@ -41,6 +41,9 @@ export default function Home({ allEventsData }) {
         <title>{siteTitle}</title>
       </Head>
       <section>
+        <Link href="/user/[pid]" as={`/user/3`}>
+          <a>sample</a>
+        </Link>
         <ul className="
           flex justify-center flex-wrap p-6 my-6">
           {allEventsData.map((event) => (
