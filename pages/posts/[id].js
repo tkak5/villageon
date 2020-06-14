@@ -15,7 +15,7 @@ require("firebase/firestore")
 initFirebase()
 var db = firebase.firestore()
 
-
+/*
 export async function getStaticPaths () {
     //return a list of possible value for id
     const ids = await db.collection('events').get().then(function(querySnapshot) {
@@ -38,8 +38,9 @@ export async function getStaticPaths () {
         fallback: false
     }
 }
+*/
 
-export async function getStaticProps({params}) {
+export async function getServerSideProps({params}) {
     //fetch necessary data for 
     const eventData = await db.collection('events').doc(params.id).get().then(function(doc) {
         if (doc.exists) {

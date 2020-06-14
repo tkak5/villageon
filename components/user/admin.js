@@ -198,7 +198,7 @@ function NewEvent (props) {
 
 function Event (props) {
     return (
-        <div className="list-none border-t-2 py-4">
+        <div className="list-none border-t-2 py-4" key={`admin${props.event.id}`}>
             <Link href="/posts/[id]" as={`/posts/${props.event.id}`}>
                 <a><h3 className="text-blue-600 text-center">{props.event.title}</h3></a>
             </Link>
@@ -209,14 +209,14 @@ function Event (props) {
             <p className="text-center">参加予定総数 {props.event.mens.length + props.event.womens.length}人</p>
             <p className="text-center">男性 {props.event.mens.length}人</p>
             {props.event.mens.map((man) => (
-                <div className="py-2">
+                <div className="py-2" key={man.name+man.mail}>
                     <p className="text-center">{man.name}</p>
                     <p className="text-center">{man.mail}</p>
                 </div>
             ))}
             <p className="text-center">女性 {props.event.womens.length}人</p>
             {props.event.womens.map((woman) => (
-                <div className="py-2">
+                <div className="py-2" key={woman.name+woman.mail}>
                     <p className="text-center">{woman.name}</p>
                     <p className="text-center">{woman.mail}</p>
                 </div>
@@ -237,6 +237,7 @@ export default function Admin(props) {
                     {props.events.map((event) => (
                         <Event
                             event={event}
+                            key={event.id+"admin"}
                         />
                     ))}
                 </div>

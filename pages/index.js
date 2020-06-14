@@ -14,7 +14,7 @@ initFirebase()
 var db = firebase.firestore()
 
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
   //const allPostsData = "title"
 
   const allEventsData = await db.collection('events').orderBy("date").get().then(function(querySnapshot) {

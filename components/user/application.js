@@ -128,9 +128,9 @@ export default function Application (props) {
                 <h2 className="text-center">参加予定のイベントリスト</h2>
                 <div>
                         {props.events.map((event) => (
-                            <div>
+                            <div key={event.id}>
                                 {event.mens.map((man) => (
-                                    <div>
+                                    <div key={`${event.id}${man.name}`}>
                                         {man.id == props.user.uid &&
                                             <Event
                                                 event={event}
@@ -141,7 +141,7 @@ export default function Application (props) {
                                     </div>
                                 ))}
                                 {event.womens.map((woman) => (
-                                    <div>
+                                    <div key={`${event.id}${woman.name}`}>
                                         {woman.id == props.user.uid &&
                                             <Event
                                                 event={event}

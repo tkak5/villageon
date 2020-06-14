@@ -23,7 +23,7 @@ var getOptions = {
 
 
 
-export async function getStaticProps() {
+export async function getServerSideProps() {
     const allEventsData = await db.collection('events').orderBy("date").get().then(function(querySnapshot) {
         var datas = []
         querySnapshot.docs.forEach(doc => {
