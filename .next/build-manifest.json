@@ -28,7 +28,7 @@
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ],
-    "/user/[pid]": [
+    "/user/details": [
       "static/runtime/webpack.js",
       "static/runtime/main.js"
     ]

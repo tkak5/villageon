@@ -249,16 +249,27 @@ export default function Post ({eventData}) {
                 <div className={styles.content}>
                     <p>{eventData[pid].content}</p>
                 </div>
-                {/*
+                
                 <div className={styles.attention}>
                     <h2>注意事項</h2>
-                    <div dangerouslySetInnerHTML={{ __html: attention.contentHtml }}/>
+                    <ul>
+                        <li>受付は開始時間の15分前から行います。</li>
+                        <li>身分証明証の提示が必要です。確認ができない場合ご参加いただけません。</li>
+                        <li>ドレスコードはありません。</li>
+                        <li>駐車場はありません。</li>
+                        <li>手荷物の紛失盗難につきましては、一切の責任を負いかねますのでご注意ください。</li>
+                    </ul>
                 </div>
                 <div className={styles.ban}>
                     <h2>禁止事項</h2>
-                    <div dangerouslySetInnerHTML={{ __html: ban.contentHtml }}/>
+                    <ul>
+                        <li>真剣な恋愛以外の目的で参加すること</li>
+                        <li>身分を偽って参加すること</li>
+                        <li>ほかのお客様に対する迷惑行為</li>
+                    </ul>
+                    <p>悪質な場合、法的手段を講じる場合がございます。</p>
                 </div>
-                */}
+                
             </article>
         </Layout>
     )

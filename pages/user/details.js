@@ -62,7 +62,6 @@ export async function getServerSideProps() {
     const [newPasswordToggle, setNewPasswordToggle] = useState(true)
     //useEffect
     const [mount, setMount] = useState(true)
-    const [update, setUpdate] = useState(false)
     //database
     const [userData, setUserData] = useState("")
 
@@ -88,6 +87,9 @@ export async function getServerSideProps() {
                     // No user is signed in.
                 }
             })
+            return function cleanup() {
+                setMount(false)
+            }
         }        
     })
 
@@ -268,11 +270,6 @@ export async function getServerSideProps() {
             })
     }
 
-    const updateEvents = () => {
-        setUpdate(true)
-    }
-
-
 
 
     return (
@@ -378,15 +375,29 @@ export async function getServerSideProps() {
                     <AnimateHeight
                         duration={300}
                         height={toggleId === "delete" ? 'auto' : 0}>
-                        <div>
-                            <input
-                                placeholder="現在のパスワード"
-                                type={passwordToggle ? "password" : "text"}
-                                onChange={changePassword}/>
-                            <input type="button" onClick={togglePassword} value="表示"/>
+                        <div className="flex flex-col justify-center items-center">
+                            <p className="text-red-500 text-center">現在予約しているイベントはキャンセルされません。</p>
+                            <p className="text-red-500 text-center">予約をしている場合は必ずキャンセルしてから削除してください。</p>
+                            <div className="border-solid border-2 rounded p-2 w-full flex max-w-sm">
+                                <input
+                                    className="w-4/5 outline-none"
+                                    placeholder="現在のパスワード"
+                                    type={passwordToggle ? "password" : "text"}
+                                    onChange={changePassword}/>
+                                <input className="w-1/5 outline-none bg-white opacity-50" type="button" onClick={togglePassword} value={passwordToggle ? "表示" : "非表示"}/>
+                            </div>
+                            <p className="text-red-600 text-center">{passwordError}</p>
+                            <div className="border-solid border-2 rounded p-2 w-full flex mt-1 max-w-sm">
+                                <input
+                                    className="w-4/5 outline-none"
+                                    placeholder="新しいパスワード"
+                                    type={newPasswordToggle ? "password" : "text"}
+                                    onChange={changeNewPassword}/>
+                                <input className="w-1/5 outline-none bg-white opacity-50" type="button" onClick={toggleNewPassword} value={newPasswordToggle ? "表示" : "非表示"}/>
+                            </div>
+                            <p className="text-red-600 text-center">{newPasswordError}</p>
+                            <input className="border-solid border-2 rounded p-2 mt-1 bg-blue-200　outline-none" type="button" onClick={submitDelete} value="削除"/>
                         </div>
-                        <p className={styles.alert}>{passwordError}</p>
-                        <input type="button" onClick={submitDelete} value="削除"/>
                     </AnimateHeight>
                 </div>
             </article>
@@ -398,7 +409,6 @@ export async function getServerSideProps() {
                 <Admin
                     events={allEventsData}
                     user={user}
-                    updateEvents={updateEvents}
                 />
             }
             <style jsx>{`
