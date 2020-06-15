@@ -51,18 +51,18 @@ export async function getServerSideProps() {
         return datas
     })
     //const postData = await getPostData(params.id)
+    /*
     const attention = await getAttention()
     const ban = await getBan()
+    */
     return {
         props: {
             eventData,
-            attention,
-            ban
         }
     }
 }
 
-export default function Post ({eventData, attention, ban}) {
+export default function Post ({eventData}) {
     const router = useRouter()
     const { pid } = router.query
 
@@ -249,6 +249,7 @@ export default function Post ({eventData, attention, ban}) {
                 <div className={styles.content}>
                     <p>{eventData[pid].content}</p>
                 </div>
+                {/*
                 <div className={styles.attention}>
                     <h2>注意事項</h2>
                     <div dangerouslySetInnerHTML={{ __html: attention.contentHtml }}/>
@@ -257,6 +258,7 @@ export default function Post ({eventData, attention, ban}) {
                     <h2>禁止事項</h2>
                     <div dangerouslySetInnerHTML={{ __html: ban.contentHtml }}/>
                 </div>
+                */}
             </article>
         </Layout>
     )
