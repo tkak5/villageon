@@ -3,6 +3,7 @@ import Layout, { siteTitle } from '../components/layout'
 import Link from 'next/link'
 import styles from '../styles/index.module.scss'
 import { getSortedPostsData } from '../lib/posts'
+import Spinner from '../components/spinner'
 
 import initFirebase from '../components/initFirebase'
 import firebase from "firebase/app"
@@ -40,18 +41,28 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ allEventsData }) {
-  const [allEventImg, setAllEventImg] = useState("")
+  const [allEventImg, setAllEventImg] = useState({})
   const [mount, setMount] = useState(true)
   useEffect(() => {
     if (mount) {
-      storageRef.child('202044.png').getDownloadURL().then(function(url) {
-        setAllEventImg(url)
+      var urls = {}
+      allEventsData.map(event => {
+        storageRef.child(`${event.id}.png`).getDownloadURL().then(function(url) {
+          urls[event.id] = url
+          setAllEventImg(urls)
+        })
       })
-    }
-    return function cleanup() {
+      /*
+      storageRef.child(`202062.png`).getDownloadURL().then(function(url) {
+        urls["202062"] = url
+      })
+      */
       setMount(false)
+      
     }
   })
+  
+  
   return (
     <Layout>
       <Head>
@@ -64,7 +75,7 @@ export default function Home({ allEventsData }) {
               <Link href="/posts/[pid]" as={`/posts/${event.id}`}>
                 <a>
                   <div className="h-full border-2 border-gray-200 shadow rounded-lg overflow-hidden">
-                    <img src={allEventImg} className="w-full object-cover object-center"/>
+                    <img src={allEventImg[event.id]} className="w-full object-cover object-center"/>
                     <div className="p-6 bg-white">
                       <h2 className="tacking-widest text-xs title-font font-medium text-gray-500 md-1">{event.date}</h2>
                       <h1 className="title-font text-lg font-medium text-gray-900 md-3">{event.title}</h1>
@@ -86,4 +97,5 @@ export default function Home({ allEventsData }) {
       </section>
     </Layout>
   )
+  
 }
