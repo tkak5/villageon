@@ -7,11 +7,15 @@ import { getSortedPostsData } from '../lib/posts'
 import initFirebase from '../components/initFirebase'
 import firebase from "firebase/app"
 import 'firebase/auth'
+import { useEffect, useState } from 'react'
 require('firebase/auth')
 require("firebase/firestore")
+require("firebase/storage")
 
 initFirebase()
 var db = firebase.firestore()
+var storage = firebase.storage()
+var storageRef = storage.ref()
 
 
 export async function getServerSideProps() {
@@ -24,32 +28,47 @@ export async function getServerSideProps() {
     })
     return datas
   })
+
   
   //const allPostsData = getSortedPostsData()
   
   return {
     props: {
-      allEventsData
+      allEventsData,
     }
   }
 }
 
 export default function Home({ allEventsData }) {
+  const [allEventImg, setAllEventImg] = useState("")
+  const [mount, setMount] = useState(true)
+  useEffect(() => {
+    if (mount) {
+      storageRef.child('202044.png').getDownloadURL().then(function(url) {
+        setAllEventImg(url)
+      })
+    }
+    return function cleanup() {
+      setMount(false)
+    }
+  })
   return (
     <Layout>
       <Head>
         <title>{siteTitle}</title>
       </Head>
-      <section>
-        <ul className="
-          flex justify-center flex-wrap p-6 my-6">
+      <section className="container px-5 py-24 mx-auto">
+        <ul className="flex flex-wrap -m-4">
           {allEventsData.map((event) => (
-            <li className="w-full sm:w-1/2 lg:w-1/3 sm:p-2 lg:p-4" key={event.id}>
+            <li className="p-4 md:w-1/2" key={event.id}>
               <Link href="/posts/[pid]" as={`/posts/${event.id}`}>
                 <a>
-                  <div className="my-4 w-full bg-white shadow h-64 flex items-center justify-center flex-col">
-                    <p className="w-full m-2 text-center">{event.title}</p>
-                    <p className="w-full m-2 text-center">{event.date}</p>
+                  <div className="h-full border-2 border-gray-200 shadow rounded-lg overflow-hidden">
+                    <img src={allEventImg} className="w-full object-cover object-center"/>
+                    <div className="p-6 bg-white">
+                      <h2 className="tacking-widest text-xs title-font font-medium text-gray-500 md-1">{event.date}</h2>
+                      <h1 className="title-font text-lg font-medium text-gray-900 md-3">{event.title}</h1>
+                    </div>
                   </div>
                 </a>
               </Link>

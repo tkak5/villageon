@@ -231,7 +231,7 @@ function NewEvent (props) {
             </style>
             </div>
             <div className="flex justify-center align-center py-2">
-                <input type="button" value={!props.event ? "新規" : "更新"} onClick={toggleDisplay} className="p-2 bg-white rounded border cursor-pointer outline-none"/>
+                <input type="button" value={!props.event ? "新規" : "編集"} onClick={toggleDisplay} className="p-2 bg-white rounded border cursor-pointer outline-none"/>
             </div>
         </div>
         

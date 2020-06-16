@@ -1,6 +1,8 @@
 import firebase from "firebase/app"
 import 'firebase/auth'
 require('firebase/auth')
+require("firebase/storage")
+
 
 
 const config = {
