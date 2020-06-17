@@ -40,27 +40,40 @@ export async function getServerSideProps() {
   }
 }
 
-export default function Home({ allEventsData }) {
-  const [allEventImg, setAllEventImg] = useState({})
+function Event(props) {
+  const [imgUrl, setImgUrl] = useState("")
   const [mount, setMount] = useState(true)
   useEffect(() => {
     if (mount) {
-      var urls = {}
-      allEventsData.map(event => {
-        storageRef.child(`${event.id}.png`).getDownloadURL().then(function(url) {
-          urls[event.id] = url
-          setAllEventImg(urls)
+      storageRef.child(`${props.event.id}.png`).getDownloadURL().then(function(url) {
+        setImgUrl(url)
+        setMount(false)
+      }).catch(function(error) {
+        storageRef.child('noimage.png').getDownloadURL().then(function(url) {
+          setImgUrl(url)
+          setMount(false)
         })
       })
-      /*
-      storageRef.child(`202062.png`).getDownloadURL().then(function(url) {
-        urls["202062"] = url
-      })
-      */
-      setMount(false)
-      
     }
   })
+  return (
+    <li className="p-4 md:w-1/2" key={props.event.id}>
+      <Link href="/posts/[pid]" as={`/posts/${props.event.id}`}>
+        <a>
+          <div className="h-full border-2 border-gray-200 shadow rounded-lg overflow-hidden">
+            <img src={imgUrl} className="w-full object-cover object-center"/>
+            <div className="p-6 bg-white">
+              <h2 className="tacking-widest text-xs title-font font-medium text-gray-500 md-1">{props.event.date}</h2>
+              <h1 className="title-font text-lg font-medium text-gray-900 md-3">{props.event.title}</h1>
+            </div>
+          </div>
+        </a>
+      </Link>
+    </li>
+  )
+}
+
+export default function Home({ allEventsData }) {
   
   
   return (
@@ -71,19 +84,9 @@ export default function Home({ allEventsData }) {
       <section className="container px-5 py-24 mx-auto">
         <ul className="flex flex-wrap -m-4">
           {allEventsData.map((event) => (
-            <li className="p-4 md:w-1/2" key={event.id}>
-              <Link href="/posts/[pid]" as={`/posts/${event.id}`}>
-                <a>
-                  <div className="h-full border-2 border-gray-200 shadow rounded-lg overflow-hidden">
-                    <img src={allEventImg[event.id]} className="w-full object-cover object-center"/>
-                    <div className="p-6 bg-white">
-                      <h2 className="tacking-widest text-xs title-font font-medium text-gray-500 md-1">{event.date}</h2>
-                      <h1 className="title-font text-lg font-medium text-gray-900 md-3">{event.title}</h1>
-                    </div>
-                  </div>
-                </a>
-              </Link>
-            </li>
+            <Event
+              event={event}
+            />
           ))}
           {allEventsData.map(({ event }) => (
               <li className="w-full sm:w-1/2 lg:w-1/3 sm:p-2 lg:p-4"></li>
